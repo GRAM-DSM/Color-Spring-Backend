@@ -1,6 +1,5 @@
-package jhhong.gramo.color.global.error.exception;
+package jhhong.gramo.color.global.error;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter

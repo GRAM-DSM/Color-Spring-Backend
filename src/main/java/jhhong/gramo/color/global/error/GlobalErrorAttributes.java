@@ -1,6 +1,5 @@
 package jhhong.gramo.color.global.error;
 
-import jhhong.gramo.color.global.error.exception.GlobalException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.reactive.error.DefaultErrorAttributes;

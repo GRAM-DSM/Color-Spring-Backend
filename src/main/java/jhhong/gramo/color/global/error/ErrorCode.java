@@ -1,4 +1,4 @@
-package jhhong.gramo.color.global.error.exception;
+package jhhong.gramo.color.global.error;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,6 +17,7 @@ public enum ErrorCode {
     CODE_NOT_FOUND(404, "Verify Code Not Found"),
     USER_NOT_WRITER(403, "User is not the writer"),
     POST_NOT_FOUND(404, "Post Not Found"),
+    INVALID_TOKEN(401, "Invalid Token"),
     COMMENT_NOT_FOUND(404, "Comment Not Found");
 
     private final int code;
