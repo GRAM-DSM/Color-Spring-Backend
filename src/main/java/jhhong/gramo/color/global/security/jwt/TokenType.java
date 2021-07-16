@@ -18,18 +18,17 @@ public enum TokenType {
 
 @Component
 class TokenExpiration {
-    @Value("${auth.access.exp}")
     public static long accessExp;
 
     public static long refreshExp;
 
 
-    @Value("${auth.refresh.exp}")
+    @Value("${auth.exp.refresh}")
     private void setRefreshExp(long refreshExp) {
         TokenExpiration.refreshExp = refreshExp;
     }
 
-    @Value("${auth.access.exp}")
+    @Value("${auth.exp.access}")
     private void setAccessExp(long accessExp) {
         TokenExpiration.accessExp = accessExp;
     }

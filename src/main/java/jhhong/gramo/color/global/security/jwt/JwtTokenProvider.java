@@ -31,9 +31,9 @@ public class JwtTokenProvider {
     }
 
     public Mono<Claims> parseToken(String token) {
-        return Mono.just(Jwts.parser()
-                .setSigningKey(getSecret()).parseClaimsJws(token)
-                .getBody());
+        return Mono.just(
+                Jwts.parser().setSigningKey(getSecret())
+                        .parseClaimsJws(token).getBody());
     }
 
     private byte[] getSecret() {

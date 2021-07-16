@@ -8,9 +8,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
+@RequiredArgsConstructor
 @Component
-public record JwtAuthenticationManager(
-        UserRepository userRepository) implements ReactiveAuthenticationManager {
+public class JwtAuthenticationManager implements ReactiveAuthenticationManager {
+
+    private final UserRepository userRepository;
 
     @Override
     public Mono<Authentication> authenticate(Authentication authentication) {

@@ -18,7 +18,6 @@ import org.springframework.security.web.server.authentication.AuthenticationWebF
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers;
 import org.springframework.stereotype.Component;
 
-@RequiredArgsConstructor
 @Component
 public record SecurityConfig(JwtTokenProvider jwtTokenProvider,
                              UserRepository userRepository) {
@@ -35,8 +34,10 @@ public record SecurityConfig(JwtTokenProvider jwtTokenProvider,
                 .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 .and()
                 .authorizeExchange()
-                .pathMatchers(HttpMethod.POST, "/user").permitAll()
+                .pathMatchers("/email").permitAll()
                 .pathMatchers(HttpMethod.POST, "/auth").permitAll()
+                .pathMatchers(HttpMethod.PUT, "/auth").permitAll()
+                .pathMatchers("/user").permitAll()
                 .anyExchange().authenticated()
                 .and().build();
     }

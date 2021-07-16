@@ -7,7 +7,6 @@ import org.springframework.security.web.server.authentication.ServerAuthenticati
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-@RequiredArgsConstructor
 public record JwtTokenExtractor(
         JwtVerifier jwtVerifier) implements ServerAuthenticationConverter {
 
