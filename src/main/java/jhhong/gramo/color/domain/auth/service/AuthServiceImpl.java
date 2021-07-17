@@ -30,8 +30,10 @@ public class AuthServiceImpl implements AuthService {
         return userRepository.findByEmail(authRequest.email())
                 .filter(user -> passwordEncoder.matches(authRequest.password(), user.getPassword()))
                 .flatMap(user -> jwtTokenProvider.generateToken(user.getEmail(), TokenType.REFRESH_TOKEN))
+                .flatMap(this::buildRefreshToken)
+                .flatMap(refreshTokenRepository::save)
                 .zipWith(jwtTokenProvider.generateToken(authRequest.email(), TokenType.ACCESS_TOKEN))
-                .flatMap(tokens -> Mono.just(new TokenResponse(tokens.getT1(), tokens.getT2())))
+                .flatMap(tokens -> Mono.just(new TokenResponse(tokens.getT1().getRefreshToken(), tokens.getT2())))
                 .switchIfEmpty(Mono.error(UserNotFoundException::new));
     }
 
@@ -45,5 +47,11 @@ public class AuthServiceImpl implements AuthService {
                 .flatMap(email -> jwtTokenProvider.generateToken(email, TokenType.ACCESS_TOKEN))
                 .flatMap(accessToken -> Mono.just(new AccessTokenResponse(accessToken)))
                 .switchIfEmpty(Mono.error(RefreshTokenNotFoundException::new));
+    }
+
+    private Mono<RefreshToken> buildRefreshToken(String refreshToken) {
+        return Mono.just(RefreshToken.builder()
+                .refreshToken(refreshToken)
+                .build());
     }
 }
