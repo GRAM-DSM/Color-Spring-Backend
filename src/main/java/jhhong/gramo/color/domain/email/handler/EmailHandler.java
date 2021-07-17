@@ -15,8 +15,8 @@ import reactor.core.publisher.Mono;
 public class EmailHandler {
 
     private final EmailService emailService;
-    private final CustomValidator<EmailRequest> emailRequestCustomValidator;
-    private final CustomValidator<VerifyRequest> verifyRequestCustomValidator;
+    private final CustomValidator emailRequestCustomValidator;
+    private final CustomValidator verifyRequestCustomValidator;
 
     public Mono<ServerResponse> sendEmail(ServerRequest request) {
         return ServerResponse.ok().build(request.bodyToMono(EmailRequest.class)

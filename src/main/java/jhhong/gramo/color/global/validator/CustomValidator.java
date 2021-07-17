@@ -9,11 +9,11 @@ import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
 @Component
-public class CustomValidator<T> {
+public class CustomValidator {
 
     private final Validator validator;
 
-    public Mono<T> validate(T target) {
+    public <T> Mono<T> validate(T target) {
         Mono<Errors> errors = Mono.just(new BeanPropertyBindingResult(target, "target"));
         return errors.doOnNext(err -> validator.validate(target, err))
                 .filter(err -> !err.hasErrors())

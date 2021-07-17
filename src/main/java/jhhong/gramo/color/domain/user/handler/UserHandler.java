@@ -1,5 +1,6 @@
 package jhhong.gramo.color.domain.user.handler;
 
+import jhhong.gramo.color.domain.user.payload.CheckNicknameRequest;
 import jhhong.gramo.color.domain.user.payload.UserRequest;
 import jhhong.gramo.color.domain.user.service.UserService;
 import jhhong.gramo.color.global.validator.CustomValidator;
@@ -16,12 +17,18 @@ import java.net.URI;
 public class UserHandler {
 
     private final UserService userService;
-    private final CustomValidator<UserRequest> customValidator;
+    private final CustomValidator customValidator;
 
     public Mono<ServerResponse> signUp(ServerRequest request) {
         return request.bodyToMono(UserRequest.class)
                 .flatMap(customValidator::validate)
                 .flatMap(userRequest -> ServerResponse.created(URI.create("/user")).body(userService.createUser(userRequest), Void.class));
+    }
+
+    public Mono<ServerResponse> checkNickname(ServerRequest request) {
+        return request.bodyToMono(CheckNicknameRequest.class)
+                .flatMap(customValidator::validate)
+                .flatMap(userRequest -> ServerResponse.ok().build(userService.checkNickname(userRequest)));
     }
 
 }

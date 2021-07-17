@@ -6,6 +6,7 @@ import jhhong.gramo.color.domain.user.entity.User;
 import jhhong.gramo.color.domain.user.entity.UserRepository;
 import jhhong.gramo.color.domain.user.exception.EmailUserNotFoundException;
 import jhhong.gramo.color.domain.user.exception.UserAlreadyExistsException;
+import jhhong.gramo.color.domain.user.payload.CheckNicknameRequest;
 import jhhong.gramo.color.domain.user.payload.UserRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,6 +34,14 @@ public class UserServiceImpl implements UserService {
         return emailUserMono
                 .flatMap(emailUser -> userRepository.save(this.buildUser(request)))
                 .switchIfEmpty(Mono.error(EmailUserNotFoundException::new))
+                .then();
+    }
+
+    @Override
+    public Mono<Void> checkNickname(CheckNicknameRequest request) {
+        return userRepository.existsByNickname(request.nickname())
+                .filter(bool -> !bool)
+                .switchIfEmpty(Mono.error(UserAlreadyExistsException::new))
                 .then();
     }
 

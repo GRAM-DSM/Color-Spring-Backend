@@ -8,4 +8,5 @@ import reactor.core.publisher.Mono;
 public interface UserRepository extends ReactiveMongoRepository<User, String> {
     Mono<Boolean> existsByEmailOrNickname(String email, String nickname);
     Mono<User> findByEmail(String email);
+    Mono<Boolean> existsByNickname(String nickname);
 }
