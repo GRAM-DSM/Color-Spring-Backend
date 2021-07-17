@@ -28,3 +28,7 @@ auth:
   exp:
     access: ${ACCESS_EXP:10000}
     refresh: ${REFRESH_EXP:2010210}
+
+logging:
+  level:
+    org.springframework.data.mongodb.repository.query: DEBUG

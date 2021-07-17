@@ -1,2 +1,23 @@
-package jhhong.gramo.color.global.validator;public class CustomValidator {
+package jhhong.gramo.color.global.validator;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
+import reactor.core.publisher.Mono;
+
+@RequiredArgsConstructor
+@Component
+public class CustomValidator<T> {
+
+    private final Validator validator;
+
+    public Mono<Void> validate(T target) {
+        Mono<Errors> errors = Mono.just(new BeanPropertyBindingResult(target, "target"));
+        return errors.doOnNext(err -> validator.validate(target, err))
+                .filter(err -> !err.hasErrors())
+                .switchIfEmpty(Mono.error(BadRequestException::new))
+                .then();
+    }
 }

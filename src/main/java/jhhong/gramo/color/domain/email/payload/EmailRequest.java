@@ -1,3 +1,5 @@
 package jhhong.gramo.color.domain.email.payload;
 
-public record EmailRequest(String email){}
+import lombok.NonNull;
+
+public record EmailRequest(@NonNull String email){}
