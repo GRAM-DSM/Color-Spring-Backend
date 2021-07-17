@@ -18,10 +18,9 @@ public class GlobalErrorAttributes extends DefaultErrorAttributes {
         Map<String, Object> map = new HashMap<>();
 
         Throwable error = getError(request);
-        if(error instanceof GlobalException) {
-            GlobalException exception = (GlobalException) error;
-            map.put("message", exception.getMessage());
-            map.put("status", exception.getErrorCode());
+        if(error instanceof GlobalException exception) {
+            map.put("message", exception.getErrorCode().getMessage());
+            map.put("status", exception.getErrorCode().getCode());
             return map;
         }
 

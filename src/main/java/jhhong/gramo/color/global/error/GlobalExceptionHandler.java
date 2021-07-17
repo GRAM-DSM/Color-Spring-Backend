@@ -31,11 +31,7 @@ public class GlobalExceptionHandler extends AbstractErrorWebExceptionHandler {
 
     private Mono<ServerResponse> renderErrorResponse(ServerRequest request) {
         Map<String, Object> errorMap = getErrorAttributes(request, ErrorAttributeOptions.defaults());
-        Object statusObj = errorMap.get("status");
-        int status = 500;
-        if(statusObj instanceof Integer) {
-            status = (int) statusObj;
-        }
+        int status = (int)errorMap.get("status");
         return ServerResponse.status(status)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(errorMap);
