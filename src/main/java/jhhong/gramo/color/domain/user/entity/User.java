@@ -1,10 +1,12 @@
 package jhhong.gramo.color.domain.user.entity;
 
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NonNull;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+@Getter
 @Builder
 @Document
 public class User {

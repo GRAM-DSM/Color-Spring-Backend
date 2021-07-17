@@ -18,7 +18,7 @@ public class JwtTokenProvider {
     @Value("${auth.secret}")
     private String secret;
 
-    public Mono<String> generateAccessToken(String email, TokenType tokenType) {
+    public Mono<String> generateToken(String email, TokenType tokenType) {
         return Mono.just(
                 Jwts.builder()
                         .setSubject(email)

@@ -1,10 +1,16 @@
 package jhhong.gramo.color.domain.email.entity;
 
-import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
+@RequiredArgsConstructor
 @Repository
-public interface EmailUserExportRepository extends ReactiveMongoRepository<EmailUser, String> {
-    Mono<EmailUser> findByEmail(String email);
+public class EmailUserExportRepository {
+
+    private final EmailUserRepository emailUserRepository;
+
+    public Mono<EmailUser> findByEmail(String email) {
+        return emailUserRepository.findByEmail(email);
+    }
 }
