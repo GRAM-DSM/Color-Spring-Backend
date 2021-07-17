@@ -24,33 +24,33 @@ public class EmailServiceImpl implements EmailService {
     private final JavaMailSender javaMailSender;
     private final EmailUserRepository emailUserRepository;
 
+    @Async
     @Override
     public void sendEmail(EmailRequest request) {
-        Mono.fromCallable(() -> {
-            try {
-                String code = getRandomHexString().toUpperCase();
+        try {
+            String code = getRandomHexString().toUpperCase();
 
-                javaMailSender.send(mimeMessage -> {
-                    final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-                    helper.setFrom("201420hjh@dsm.hs.kr");
-                    helper.setTo(request.email());
-                    helper.setSubject("#Color 인증 코드");
-                    helper.setText(code);
-                });
+            javaMailSender.send(mimeMessage -> {
+                final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+                helper.setFrom("201420hjh@dsm.hs.kr");
+                helper.setTo(request.email());
+                helper.setSubject("#Color 인증 코드");
+                helper.setText(code);
+            });
 
-                return emailUserRepository.existsByEmail(request.email())
-                        .filter(bool -> bool)
-                        .doOnNext(bool -> emailUserRepository.save(
-                                EmailUser.builder()
-                                        .email(request.email())
-                                        .code(code)
-                                        .build()
-                        ).subscribe());
+            emailUserRepository.findByEmail(request.email())
+                    .flatMap(emailUser -> Mono.just(emailUser.update(code)))
+                    .flatMap(emailUserRepository::save)
+                    .switchIfEmpty(emailUserRepository.save(
+                            EmailUser.builder()
+                                    .email(request.email())
+                                    .code(code)
+                                    .build()
+                    )).subscribe();
 
-            } catch (Exception e) {
-                return Mono.error(new EmailSendFailException());
-            }
-        }).subscribe();
+        } catch (Exception e) {
+            throw new EmailSendFailException();
+        }
     }
 
     @Override

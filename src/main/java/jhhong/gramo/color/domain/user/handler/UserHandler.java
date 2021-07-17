@@ -21,8 +21,7 @@ public class UserHandler {
     public Mono<ServerResponse> signUp(ServerRequest request) {
         return request.bodyToMono(UserRequest.class)
                 .flatMap(customValidator::validate)
-                .flatMap(userService::createUser)
-                .flatMap(unused -> ServerResponse.created(URI.create("/user")).body(unused, Void.class));
+                .flatMap(userRequest -> ServerResponse.created(URI.create("/user")).body(userService.createUser(userRequest), Void.class));
     }
 
 }

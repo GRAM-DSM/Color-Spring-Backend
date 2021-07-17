@@ -10,7 +10,10 @@ import jhhong.gramo.color.domain.user.payload.UserRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
+
+import java.net.URI;
 
 @RequiredArgsConstructor
 @Service
@@ -22,7 +25,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Mono<Void> createUser(UserRequest request) {
-        Mono<EmailUser> emailUserMono = userRepository.existsByEmail(request.email())
+        Mono<EmailUser> emailUserMono = userRepository.existsByEmailOrNickname(request.email(), request.nickname())
                 .filter(bool -> !bool)
                 .switchIfEmpty(Mono.error(UserAlreadyExistsException::new))
                 .flatMap(bool -> emailUserExportRepository.findByEmail(request.email()));

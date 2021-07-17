@@ -1,5 +1,6 @@
 package jhhong.gramo.color.domain.email.entity;
 
+import jhhong.gramo.color.domain.email.payload.EmailRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,7 +22,7 @@ public class EmailUser {
 
     @NonNull
     @Indexed(unique = true)
-    private final String code;
+    private String code;
 
     @NonNull
     @Indexed(unique = true)
@@ -32,10 +33,16 @@ public class EmailUser {
 
     @Builder.Default
     @Indexed(expireAfterSeconds = 180)
-    private final LocalDateTime expireAt = LocalDateTime.now();
+    private LocalDateTime expireAt = LocalDateTime.now();
 
     public EmailUser updateStatus() {
         this.status = true;
+        return this;
+    }
+
+    public EmailUser update(String code) {
+        this.code = code;
+        this.expireAt = LocalDateTime.now();
         return this;
     }
 
