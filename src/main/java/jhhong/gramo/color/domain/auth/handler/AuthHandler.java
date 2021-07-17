@@ -1,5 +1,6 @@
 package jhhong.gramo.color.domain.auth.handler;
 
+import jhhong.gramo.color.domain.auth.payload.AccessTokenResponse;
 import jhhong.gramo.color.domain.auth.payload.AuthRequest;
 import jhhong.gramo.color.domain.auth.payload.TokenResponse;
 import jhhong.gramo.color.domain.auth.service.AuthService;
@@ -22,6 +23,11 @@ public class AuthHandler {
     public Mono<ServerResponse> createToken(ServerRequest request) {
         return request.bodyToMono(AuthRequest.class)
                 .flatMap(customValidator::validate)
-                .flatMap(req -> ServerResponse.created(URI.create("/auth")).body(authService.createToken(req), TokenResponse.class));
+                .flatMap(req -> ServerResponse.created(URI.create("/auth")).body(authService.createToken(req), TokenResponse.class));   // 어떤 구조인지 공부
+    }
+
+    public Mono<ServerResponse> refreshToken(ServerRequest request) {
+        String refreshToken = request.headers().firstHeader("Refresh-Token");
+        return ServerResponse.status(204).body(authService.refreshToken(refreshToken), AccessTokenResponse.class);
     }
 }

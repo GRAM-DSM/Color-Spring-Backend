@@ -6,6 +6,7 @@ import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 
@@ -23,4 +24,9 @@ public class RefreshToken {
     @Builder.Default
     @Indexed(expireAfterSeconds = 1209600)
     private LocalDateTime expireAt = LocalDateTime.now();
+
+    public Mono<RefreshToken> updateExp() {
+        this.expireAt = LocalDateTime.now();
+        return Mono.just(this);
+    }
 }

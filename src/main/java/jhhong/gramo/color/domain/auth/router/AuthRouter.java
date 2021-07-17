@@ -21,7 +21,8 @@ public class AuthRouter {
     public RouterFunction<ServerResponse> authRouters() {
         return route().path("/auth", builder ->
                 builder.nest(accept(MediaType.APPLICATION_JSON), routes -> routes
-                        .POST("", authHandler::createToken)))
+                        .POST("", authHandler::createToken)
+                        .PUT("", authHandler::refreshToken)))
                 .build();
     }
 }
