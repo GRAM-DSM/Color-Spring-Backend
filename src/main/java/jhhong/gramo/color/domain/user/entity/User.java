@@ -7,8 +7,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Builder
 @Document
-public record User(
-        @NonNull @Indexed(unique = true) String email,
-        @NonNull String password,
-        @NonNull @Indexed(unique = true) String nickname) {
+public class User {
+
+    @NonNull @Indexed(unique = true)
+    private final String email;
+
+    @NonNull
+    private final String password;
+
+    @NonNull @Indexed(unique = true)
+    private final String nickname;
 }

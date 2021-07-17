@@ -10,6 +10,7 @@ public enum ErrorCode {
 
     BAD_REQUEST(400, "Bad Request. Check json"),
     USER_NOT_FOUND(404, "User Not Found Exception"),
+    EMAIL_USER_NOT_FOUND(404, "Email User Not Found"),
     REFRESH_TOKEN_NOT_FOUND(404, "Refresh Token Not Found"),
     USER_ALREADY_EXIST(409, "User Already Exist"),
     VERIFY_USER_NOT_FOUND(404, "User Not Verified"),

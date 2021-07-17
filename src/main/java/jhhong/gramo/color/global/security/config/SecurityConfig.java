@@ -57,4 +57,5 @@ public record SecurityConfig(JwtTokenProvider jwtTokenProvider,
 
         return filter;
     }
+
 }
