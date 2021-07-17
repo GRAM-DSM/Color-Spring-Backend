@@ -22,7 +22,6 @@ public class AuthHandler {
     public Mono<ServerResponse> createToken(ServerRequest request) {
         return request.bodyToMono(AuthRequest.class)
                 .flatMap(customValidator::validate)
-                .flatMap(authService::createToken)
-                .flatMap(tokenResponse -> ServerResponse.created(URI.create("/auth")).body(tokenResponse, TokenResponse.class));
+                .flatMap(req -> ServerResponse.created(URI.create("/auth")).body(authService.createToken(req), TokenResponse.class));
     }
 }
