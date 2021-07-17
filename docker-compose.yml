@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  color:
+    build: .
+    container_name: color-backend
+    ports:
+    - "8009:8009"
+
