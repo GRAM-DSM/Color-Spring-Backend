@@ -24,28 +24,28 @@ public class EmailServiceImpl implements EmailService {
     private final JavaMailSender javaMailSender;
     private final EmailUserRepository emailUserRepository;
 
-    @Async
     @Override
     public void sendEmail(EmailRequest request) {
         Mono.fromCallable(() -> {
             try {
                 String code = getRandomHexString().toUpperCase();
-                final MimeMessagePreparator preparator = mimeMessage -> {
+
+                javaMailSender.send(mimeMessage -> {
                     final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
                     helper.setFrom("201420hjh@dsm.hs.kr");
                     helper.setTo(request.email());
                     helper.setSubject("#Color 인증 코드");
                     helper.setText(code);
-                };
+                });
 
-                javaMailSender.send(preparator);
-
-                return emailUserRepository.save(
-                        EmailUser.builder()
-                                .email(request.email())
-                                .code(code)
-                                .build()
-                ).subscribe();
+                return emailUserRepository.existsByEmail(request.email())
+                        .filter(bool -> bool)
+                        .doOnNext(bool -> emailUserRepository.save(
+                                EmailUser.builder()
+                                        .email(request.email())
+                                        .code(code)
+                                        .build()
+                        ).subscribe());
 
             } catch (Exception e) {
                 return Mono.error(new EmailSendFailException());
