@@ -19,6 +19,9 @@ public class RefreshToken {
     @Id
     private final String id;
 
+    @Indexed(unique = true)
+    private final String email;
+
     private final String refreshToken;
 
     @Builder.Default
