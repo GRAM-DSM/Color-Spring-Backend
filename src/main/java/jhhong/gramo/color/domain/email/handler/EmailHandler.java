@@ -20,14 +20,13 @@ public class EmailHandler {
 
     public Mono<ServerResponse> sendEmail(ServerRequest request) {
         return ServerResponse.ok().build(request.bodyToMono(EmailRequest.class)
-                .doOnNext(emailRequestCustomValidator::validate)
-                .doOnNext(emailService::sendEmail)
-                .then()`);
+                .flatMap(emailRequestCustomValidator::validate)
+                .doOnNext(emailService::sendEmail).then());
     }
 
     public Mono<ServerResponse> verifyEmail(ServerRequest request) {
         return request.bodyToMono(VerifyRequest.class)
-                .doOnNext(verifyRequestCustomValidator::validate)
+                .flatMap(verifyRequestCustomValidator::validate)
                 .flatMap(emailService::verifyUser)
                 .flatMap(res -> ServerResponse.ok().body(res, Void.class));
     }

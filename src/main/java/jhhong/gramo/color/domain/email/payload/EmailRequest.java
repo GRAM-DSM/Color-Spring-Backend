@@ -1,5 +1,5 @@
 package jhhong.gramo.color.domain.email.payload;
 
-import lombok.NonNull;
+import javax.validation.constraints.Email;
 
-public record EmailRequest(@NonNull String email){}
+public record EmailRequest(@Email(message = "Email Format Error") String email){}

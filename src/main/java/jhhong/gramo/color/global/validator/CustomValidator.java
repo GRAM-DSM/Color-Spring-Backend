@@ -13,11 +13,11 @@ public class CustomValidator<T> {
 
     private final Validator validator;
 
-    public Mono<Void> validate(T target) {
+    public Mono<T> validate(T target) {
         Mono<Errors> errors = Mono.just(new BeanPropertyBindingResult(target, "target"));
         return errors.doOnNext(err -> validator.validate(target, err))
                 .filter(err -> !err.hasErrors())
-                .switchIfEmpty(Mono.error(BadRequestException::new))
-                .then();
+                .flatMap(err -> Mono.just(target))
+                .switchIfEmpty(Mono.error(BadRequestException::new));
     }
 }
