@@ -22,7 +22,7 @@ public class RefreshToken {
     @Indexed(unique = true)
     private final String email;
 
-    private final String refreshToken;
+    private String refreshToken;
 
     @Builder.Default
     @Indexed(expireAfterSeconds = 1209600)
@@ -30,6 +30,11 @@ public class RefreshToken {
 
     public Mono<RefreshToken> updateExp() {
         this.expireAt = LocalDateTime.now();
+        return Mono.just(this);
+    }
+
+    public Mono<RefreshToken> updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
         return Mono.just(this);
     }
 }

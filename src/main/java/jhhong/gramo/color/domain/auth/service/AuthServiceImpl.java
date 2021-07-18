@@ -29,9 +29,7 @@ public class AuthServiceImpl implements AuthService {
     public Mono<TokenResponse> createToken(AuthRequest authRequest) {
         return userRepository.findByEmail(authRequest.email())
                 .filter(user -> passwordEncoder.matches(authRequest.password(), user.getPassword()))
-                .flatMap(user -> jwtTokenProvider.generateToken(user.getEmail(), TokenType.REFRESH_TOKEN))
-                .flatMap(token -> buildRefreshToken(token, authRequest.email()))
-                .flatMap(this::saveIfEmpty)
+                .flatMap(user -> saveIfEmpty(user.getEmail()))
                 .zipWith(jwtTokenProvider.generateToken(authRequest.email(), TokenType.ACCESS_TOKEN))
                 .flatMap(tokens -> Mono.just(new TokenResponse(tokens.getT1().getRefreshToken(), tokens.getT2())))
                 .switchIfEmpty(Mono.error(UserNotFoundException::new));
@@ -49,16 +47,23 @@ public class AuthServiceImpl implements AuthService {
                 .switchIfEmpty(Mono.error(RefreshTokenNotFoundException::new));
     }
 
-    private Mono<RefreshToken> buildRefreshToken(String refreshToken, String email) {
-        return Mono.just(RefreshToken.builder()
-                .refreshToken(refreshToken)
-                .email(email)
-                .build());
+    private Mono<RefreshToken> buildRefreshToken(String email) {
+        return jwtTokenProvider.generateToken(email, TokenType.REFRESH_TOKEN)
+                .map(token -> RefreshToken.builder()
+                        .refreshToken(token)
+                        .email(email)
+                        .build());
     }
 
-    private Mono<RefreshToken> saveIfEmpty(RefreshToken refreshToken) {
-        return refreshTokenRepository.findByEmail(refreshToken.getEmail())
-                .switchIfEmpty(refreshTokenRepository.save(refreshToken));
+    private Mono<RefreshToken> saveIfEmpty(String email) {
+        Mono<String> refreshToken = jwtTokenProvider.generateToken(email, TokenType.REFRESH_TOKEN);
+
+        Mono<RefreshToken> refreshTokenMono = refreshTokenRepository.findByEmail(email)
+                .zipWith(refreshToken)
+                .flatMap(refresh -> refresh.getT1().updateRefreshToken(refresh.getT2()))
+                .switchIfEmpty(this.buildRefreshToken(email));
+
+        return refreshTokenMono.flatMap(refreshTokenRepository::save);
     }
 
 }
