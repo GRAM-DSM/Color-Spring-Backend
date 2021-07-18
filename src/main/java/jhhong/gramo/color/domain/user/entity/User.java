@@ -13,7 +13,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class User {
 
     @Id
-    @NonNull @Indexed(unique = true)
+    @NonNull
     private final String email;
 
     @NonNull
