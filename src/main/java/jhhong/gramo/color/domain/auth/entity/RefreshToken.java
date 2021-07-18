@@ -35,6 +35,7 @@ public class RefreshToken {
 
     public Mono<RefreshToken> updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
+        this.expireAt = LocalDateTime.now();
         return Mono.just(this);
     }
 }
