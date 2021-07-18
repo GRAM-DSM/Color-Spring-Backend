@@ -1,5 +1,7 @@
 package jhhong.gramo.color.domain.post.entity;
 
+import jhhong.gramo.color.domain.post.comment.entity.Comment;
+import jhhong.gramo.color.domain.post.comment.exception.CommentNotFoundException;
 import jhhong.gramo.color.domain.post.entity.enums.Feel;
 import jhhong.gramo.color.domain.post.post.payload.CreatePostRequest;
 import lombok.*;
@@ -48,6 +50,21 @@ public class Post {
         this.feel = request.feel();
         this.hashTag = request.hashTag();
         return Mono.just(this);
+    }
+
+    public Mono<Post> addComment(Comment comment) {
+        this.comment.add(comment);
+        return Mono.just(this);
+    }
+
+    public Mono<Post> deleteComment(String commentId) {
+        comment.remove(findComment(commentId));
+        return Mono.just(this);
+    }
+
+    private Comment findComment(String commentId) {
+        return comment.stream().filter(com -> com.getId().equals(commentId)).findFirst()
+                .orElseThrow(CommentNotFoundException::new);
     }
 
 }
