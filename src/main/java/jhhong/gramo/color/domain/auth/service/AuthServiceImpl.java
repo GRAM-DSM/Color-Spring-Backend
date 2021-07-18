@@ -31,7 +31,7 @@ public class AuthServiceImpl implements AuthService {
                 .filter(user -> passwordEncoder.matches(authRequest.password(), user.getPassword()))
                 .flatMap(user -> saveIfEmpty(user.getEmail()))
                 .zipWith(jwtTokenProvider.generateToken(authRequest.email(), TokenType.ACCESS_TOKEN))
-                .flatMap(tokens -> Mono.just(new TokenResponse(tokens.getT1().getRefreshToken(), tokens.getT2())))
+                .flatMap(tokens -> Mono.just(new TokenResponse(tokens.getT2(), tokens.getT1().getRefreshToken())))
                 .switchIfEmpty(Mono.error(UserNotFoundException::new));
     }
 
