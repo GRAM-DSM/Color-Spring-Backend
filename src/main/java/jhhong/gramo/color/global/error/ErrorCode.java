@@ -19,6 +19,7 @@ public enum ErrorCode {
     USER_NOT_WRITER(403, "User is not the writer"),
     POST_NOT_FOUND(404, "Post Not Found"),
     INVALID_TOKEN(401, "Invalid Token"),
+    INVALID_ACCESS(401, "Invalid Access"),
     EMAIL_SEND_FAILED(500, "Email Send Failed"),
     COMMENT_NOT_FOUND(404, "Comment Not Found");
 
