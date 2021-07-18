@@ -17,9 +17,6 @@ import java.time.LocalDateTime;
 public class RefreshToken {
 
     @Id
-    private final String id;
-
-    @Indexed(unique = true)
     private final String email;
 
     private String refreshToken;

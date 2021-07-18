@@ -17,15 +17,12 @@ import java.time.LocalDateTime;
 @Document
 public class EmailUser {
 
-    @Id
-    private final String id;
-
     @NonNull
     @Indexed(unique = true)
     private String code;
 
     @NonNull
-    @Indexed(unique = true)
+    @Id
     private final String email;
 
     @Builder.Default
