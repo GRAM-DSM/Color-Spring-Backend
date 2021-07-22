@@ -32,8 +32,8 @@ public class UserServiceImpl implements UserService {
                 .flatMap(bool -> emailUserExportRepository.findByEmail(request.email()));
 
         return emailUserMono
-                .flatMap(emailUser -> userRepository.save(this.buildUser(request)))
                 .switchIfEmpty(Mono.error(EmailUserNotFoundException::new))
+                .flatMap(emailUser -> userRepository.save(this.buildUser(request)))
                 .then();
     }
 
