@@ -7,5 +7,5 @@ import reactor.core.publisher.Mono;
 public interface EmailService {
     void sendEmail(EmailRequest request);
 
-    Mono<Void> verifyUser(VerifyRequest request);
+    Mono<Void> verifyUser(String email, String code);
 }

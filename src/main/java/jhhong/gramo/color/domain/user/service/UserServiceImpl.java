@@ -38,8 +38,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Mono<Void> checkNickname(CheckNicknameRequest request) {
-        return userRepository.existsByNickname(request.nickname())
+    public Mono<Void> checkNickname(String nickname) {
+        return userRepository.existsByNickname(nickname)
                 .filter(bool -> !bool)
                 .switchIfEmpty(Mono.error(UserAlreadyExistsException::new))
                 .then();

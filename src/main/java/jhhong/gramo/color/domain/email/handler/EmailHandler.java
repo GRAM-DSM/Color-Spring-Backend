@@ -1,9 +1,9 @@
 package jhhong.gramo.color.domain.email.handler;
 
 import jhhong.gramo.color.domain.email.payload.EmailRequest;
-import jhhong.gramo.color.domain.email.payload.VerifyRequest;
 import jhhong.gramo.color.domain.email.service.EmailService;
 import jhhong.gramo.color.global.validator.CustomValidator;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -27,9 +27,13 @@ public class EmailHandler {
     }
 
     public Mono<ServerResponse> verifyEmail(ServerRequest request) {
-        return request.bodyToMono(VerifyRequest.class)
-                .flatMap(verifyRequestCustomValidator::validate)
-                .flatMap(emailService::verifyUser)
+        @NonNull
+        String email = request.pathVariable("email");
+
+        @NonNull
+        String code = request.pathVariable("code");
+
+        return emailService.verifyUser(email, code)
                 .flatMap(res -> ServerResponse.ok().body(res, Void.class));
     }
 }

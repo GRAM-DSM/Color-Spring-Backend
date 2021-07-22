@@ -56,8 +56,8 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public Mono<Void> verifyUser(VerifyRequest request) {
-        return emailUserRepository.findByEmailAndCode(request.email(), request.code())
+    public Mono<Void> verifyUser(String email, String code) {
+        return emailUserRepository.findByEmailAndCode(email, code)
                 .flatMap(emailUser -> Mono.just(emailUser.updateStatus()))
                 .flatMap(emailUserRepository::save)
                 .switchIfEmpty(Mono.error(NumberNotFoundException::new))

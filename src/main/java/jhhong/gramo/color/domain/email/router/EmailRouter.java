@@ -23,7 +23,7 @@ public class EmailRouter {
         return route().path("/email",
                 builder -> builder.nest(accept(MediaType.APPLICATION_JSON), routes -> routes
                     .POST("", emailHandler::sendEmail)
-                    .GET("", emailHandler::verifyEmail)))
+                    .HEAD("/{email}/{code}", emailHandler::verifyEmail)))
                 .build();
     }
 }

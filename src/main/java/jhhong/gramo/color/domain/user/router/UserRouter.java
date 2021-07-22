@@ -21,7 +21,8 @@ public class UserRouter {
     public RouterFunction<ServerResponse> userRouters() {
         return route().path("/user",
                 builder -> builder.nest(accept(MediaType.APPLICATION_JSON), router -> router
-                .POST("", userHandler::signUp)))
+                .POST("", userHandler::signUp))
+                .HEAD("/{nickname}", userHandler::checkNickname))
                 .build();
     }
 }

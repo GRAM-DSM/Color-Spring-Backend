@@ -4,6 +4,7 @@ import jhhong.gramo.color.domain.user.payload.CheckNicknameRequest;
 import jhhong.gramo.color.domain.user.payload.UserRequest;
 import jhhong.gramo.color.domain.user.service.UserService;
 import jhhong.gramo.color.global.validator.CustomValidator;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -26,9 +27,8 @@ public class UserHandler {
     }
 
     public Mono<ServerResponse> checkNickname(ServerRequest request) {
-        return request.bodyToMono(CheckNicknameRequest.class)
-                .flatMap(customValidator::validate)
-                .flatMap(userRequest -> ServerResponse.ok().build(userService.checkNickname(userRequest)));
+        return Mono.just(request.pathVariable("nickname"))
+                .flatMap((@NonNull var userRequest) -> ServerResponse.ok().build(userService.checkNickname(userRequest)));
     }
 
 }

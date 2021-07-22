@@ -6,5 +6,5 @@ import reactor.core.publisher.Mono;
 
 public interface UserService {
     Mono<Void> createUser(UserRequest request);
-    Mono<Void> checkNickname(CheckNicknameRequest request);
+    Mono<Void> checkNickname(String nickname);
 }
