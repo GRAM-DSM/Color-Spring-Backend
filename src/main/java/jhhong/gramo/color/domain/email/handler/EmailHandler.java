@@ -19,9 +19,11 @@ public class EmailHandler {
     private final CustomValidator verifyRequestCustomValidator;
 
     public Mono<ServerResponse> sendEmail(ServerRequest request) {
-        return ServerResponse.ok().build(request.bodyToMono(EmailRequest.class)
+        Mono<Void> res = request.bodyToMono(EmailRequest.class)
                 .flatMap(emailRequestCustomValidator::validate)
-                .doOnNext(emailService::sendEmail).then());
+                .doOnNext(emailService::sendEmail).then();
+
+        return ServerResponse.ok().body(res, Void.class);
     }
 
     public Mono<ServerResponse> verifyEmail(ServerRequest request) {

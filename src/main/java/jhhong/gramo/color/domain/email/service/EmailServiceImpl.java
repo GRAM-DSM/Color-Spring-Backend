@@ -13,6 +13,7 @@ import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.util.Random;
 
@@ -24,33 +25,34 @@ public class EmailServiceImpl implements EmailService {
     private final JavaMailSender javaMailSender;
     private final EmailUserRepository emailUserRepository;
 
-    @Async
     @Override
     public void sendEmail(EmailRequest request) {
-        try {
-            String code = getRandomHexString().toUpperCase();
+        Mono.fromRunnable(() -> {
+            try {
+                String code = getRandomHexString().toUpperCase();
 
-            javaMailSender.send(mimeMessage -> {
-                final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-                helper.setFrom("201420hjh@dsm.hs.kr");
-                helper.setTo(request.email());
-                helper.setSubject("#Color 인증 코드");
-                helper.setText(code);
-            });
+                javaMailSender.send(mimeMessage -> {
+                    final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+                    helper.setFrom("201420hjh@dsm.hs.kr");
+                    helper.setTo(request.email());
+                    helper.setSubject("#Color 인증 코드");
+                    helper.setText(code);
+                });
 
-            emailUserRepository.findByEmail(request.email())
-                    .flatMap(emailUser -> Mono.just(emailUser.update(code)))
-                    .flatMap(emailUserRepository::save)
-                    .switchIfEmpty(emailUserRepository.save(
-                            EmailUser.builder()
-                                    .email(request.email())
-                                    .code(code)
-                                    .build()
-                    )).subscribe();
+                emailUserRepository.findByEmail(request.email())
+                        .flatMap(emailUser -> Mono.just(emailUser.update(code)))
+                        .flatMap(emailUserRepository::save)
+                        .switchIfEmpty(emailUserRepository.save(
+                                EmailUser.builder()
+                                        .email(request.email())
+                                        .code(code)
+                                        .build()
+                        )).subscribe();
 
-        } catch (Exception e) {
-            throw new EmailSendFailException();
-        }
+            } catch (Exception e) {
+                throw new EmailSendFailException();
+            }
+        }).publishOn(Schedulers.parallel()).subscribe();
     }
 
     @Override
