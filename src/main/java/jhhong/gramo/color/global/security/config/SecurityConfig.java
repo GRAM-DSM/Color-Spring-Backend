@@ -37,6 +37,8 @@ public record SecurityConfig(JwtTokenProvider jwtTokenProvider,
                 .pathMatchers("/email").permitAll()
                 .pathMatchers(HttpMethod.POST, "/auth").permitAll()
                 .pathMatchers(HttpMethod.PUT, "/auth").permitAll()
+                .pathMatchers(HttpMethod.HEAD, "/email/**").permitAll()
+                .pathMatchers(HttpMethod.HEAD, "/user/**").permitAll()
                 .pathMatchers("/user").permitAll()
                 .anyExchange().authenticated()
                 .and().build();
