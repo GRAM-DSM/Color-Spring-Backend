@@ -16,7 +16,6 @@ public class EmailHandler {
 
     private final EmailService emailService;
     private final CustomValidator emailRequestCustomValidator;
-    private final CustomValidator verifyRequestCustomValidator;
 
     public Mono<ServerResponse> sendEmail(ServerRequest request) {
         Mono<Void> res = request.bodyToMono(EmailRequest.class)
