@@ -7,6 +7,7 @@ import jhhong.gramo.color.domain.auth.exception.RefreshTokenNotFoundException;
 import jhhong.gramo.color.domain.auth.payload.AccessTokenResponse;
 import jhhong.gramo.color.domain.auth.payload.AuthRequest;
 import jhhong.gramo.color.domain.auth.payload.TokenResponse;
+import jhhong.gramo.color.domain.user.entity.User;
 import jhhong.gramo.color.domain.user.entity.UserRepository;
 import jhhong.gramo.color.domain.user.exception.UserNotFoundException;
 import jhhong.gramo.color.global.security.jwt.JwtTokenProvider;
@@ -29,6 +30,8 @@ public class AuthServiceImpl implements AuthService {
     public Mono<TokenResponse> createToken(AuthRequest authRequest) {
         return userRepository.findByEmail(authRequest.email())
                 .filter(user -> passwordEncoder.matches(authRequest.password(), user.getPassword()))
+                .map(user -> user.addToken(authRequest.deviceToken()))
+                .flatMap(userRepository::save)
                 .flatMap(user -> saveIfEmpty(user.getEmail()))
                 .zipWith(jwtTokenProvider.generateToken(authRequest.email(), TokenType.ACCESS_TOKEN))
                 .flatMap(tokens -> Mono.just(new TokenResponse(tokens.getT2(), tokens.getT1().getRefreshToken())))

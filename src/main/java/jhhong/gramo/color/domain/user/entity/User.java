@@ -21,4 +21,11 @@ public class User {
 
     @NonNull @Indexed(unique = true)
     private final String nickname;
+
+    private String deviceToken;
+
+    public User addToken(String deviceToken) {
+        this.deviceToken = deviceToken;
+        return this;
+    }
 }
