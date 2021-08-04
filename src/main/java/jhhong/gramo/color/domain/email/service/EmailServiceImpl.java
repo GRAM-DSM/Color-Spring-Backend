@@ -42,8 +42,8 @@ public class EmailServiceImpl implements EmailService {
                                     .email(request.email())
                                     .code(code)
                                     .build()
-                    )).subscribe();                                                                         // 어차피 새로운 Thread라 Blocking 상관 X
-        }).publishOn(Schedulers.newParallel("emailThread", 1, true)).then();        // newParallel을 통해 완전히 새로운 Thread에서 실행
+                    )).subscribe();
+        });
     }
 
     @Override

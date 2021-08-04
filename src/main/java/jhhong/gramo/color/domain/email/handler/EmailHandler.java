@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 @RequiredArgsConstructor
 @Component
@@ -18,11 +19,12 @@ public class EmailHandler {
     private final CustomValidator emailRequestCustomValidator;
 
     public Mono<ServerResponse> sendEmail(ServerRequest request) {
-        Mono<Void> res = request.bodyToMono(EmailRequest.class)
-                .flatMap(emailRequestCustomValidator::validate)
-                .doOnNext(emailService::sendEmail).then();
-
-        return ServerResponse.ok().body(res, Void.class);
+        return ServerResponse.ok().body(
+                request.bodyToMono(EmailRequest.class)
+                        .flatMap(emailRequestCustomValidator::validate)
+                        .doOnNext(req -> Mono.defer(() -> emailService.sendEmail(req)
+                                .subscribeOn(Schedulers.boundedElastic())).subscribe())
+                        .then(), Void.class);
     }
 
     public Mono<ServerResponse> verifyEmail(ServerRequest request) {
