@@ -91,7 +91,7 @@ public class PostServiceImpl implements PostService {
                         PostContentResponse.builder()
                                 .commentCnt(post.getComment() == null ? 0 : post.getComment().size())
                                 .content(post.getContent())
-                                .createdAt(post.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 hh시 mm분 SS초")))
+                                .createdAt(post.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일")))
                                 .favoriteCnt(post.getFavorite() == null ? 0 : post.getFavorite().size())
                                 .hashCode(post.getHashTag())
                                 .id(post.getId())
