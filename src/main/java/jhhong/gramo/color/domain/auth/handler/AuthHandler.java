@@ -28,6 +28,6 @@ public class AuthHandler {
 
     public Mono<ServerResponse> refreshToken(ServerRequest request) {
         String refreshToken = request.headers().firstHeader("Refresh-Token");
-        return ServerResponse.status(204).body(authService.refreshToken(refreshToken), AccessTokenResponse.class);
+        return ServerResponse.ok().body(authService.refreshToken(refreshToken), AccessTokenResponse.class);
     }
 }
