@@ -34,7 +34,7 @@ public class PostContentResponse {
     private Boolean isFavorite;
 
     @JsonProperty("created_at")
-    private LocalDateTime createdAt;
+    private String createdAt;
 
     @JsonProperty("hash_code")
     private List<String> hashCode;
