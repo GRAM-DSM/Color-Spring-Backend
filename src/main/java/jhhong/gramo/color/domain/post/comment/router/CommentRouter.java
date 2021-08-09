@@ -23,7 +23,7 @@ public class CommentRouter {
                 builder -> builder.nest(accept(MediaType.APPLICATION_JSON), routes -> routes
                         .DELETE("/{post_id}/{comment_id}", commentHandler::deleteComment)
                         .GET("/{post_id}", commentHandler::getComment)
-                        .POST("/${post_id}", commentHandler::createComment)))
+                        .POST("/{post_id}", commentHandler::createComment)))
                 .build();
     }
 }

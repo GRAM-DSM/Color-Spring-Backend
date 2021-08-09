@@ -38,7 +38,6 @@ public class CommentHandler {
     }
 
     public Mono<ServerResponse> createComment(ServerRequest request) {
-        System.out.println("아아 핸들러에 도착했다 오바");
         String postId = request.pathVariable("post_id");
 
         return request.bodyToMono(CreateCommentRequest.class)
