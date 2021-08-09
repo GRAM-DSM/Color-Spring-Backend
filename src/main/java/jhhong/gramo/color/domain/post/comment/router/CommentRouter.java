@@ -2,6 +2,7 @@ package jhhong.gramo.color.domain.post.comment.router;
 
 import jhhong.gramo.color.domain.post.comment.handler.CommentHandler;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.server.RouterFunction;
@@ -16,6 +17,7 @@ public class CommentRouter {
 
     private final CommentHandler commentHandler;
 
+    @Bean
     public RouterFunction<ServerResponse> commentRoute() {
         return route().path("/comment",
                 builder -> builder.nest(accept(MediaType.APPLICATION_JSON), routes -> routes
