@@ -28,6 +28,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Mono<Void> createComment(CreateCommentRequest request, String postId) {
         return postRepository.findById(postId)
+                .switchIfEmpty(Mono.error(PostNotFoundException::new))
                 .zipWith(buildComment(request))
                 .flatMap(infos -> infos.getT1().addComment(infos.getT2()))
                 .flatMap(postRepository::save)
