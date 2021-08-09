@@ -23,8 +23,7 @@ public class CommentHandler {
         int page = Integer.parseInt(request.queryParam("page")
                 .orElse("0"));
 
-        String postId = request.queryParam("post_id")
-                .orElseThrow(PostNotFoundException::new);
+        String postId = request.pathVariable("post_id");
 
         return commentService.getComment(postId, PageRequest.of(page, 6))
                 .flatMap(commentListResponse -> ServerResponse.ok().bodyValue(commentListResponse));
