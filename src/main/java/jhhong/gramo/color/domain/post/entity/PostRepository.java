@@ -10,5 +10,5 @@ import reactor.core.publisher.Mono;
 
 @Repository
 public interface PostRepository extends ReactiveMongoRepository<Post, String> {
-    Flux<Post> findAllByFeel(Feel feel, Pageable pageable);
+    Flux<Post> findAllByFeelOrderByCreatedAt(Feel feel, Pageable pageable);
 }

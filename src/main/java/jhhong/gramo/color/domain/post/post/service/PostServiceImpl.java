@@ -71,7 +71,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Mono<PostListResponse> getPost(Feel feel, int page) {
-        Flux<PostContentResponse> postContentResponseFlux = postRepository.findAllByFeel(feel, PageRequest.of(page, 6))
+        Flux<PostContentResponse> postContentResponseFlux = postRepository.findAllByFeelOrderByCreatedAt(feel, PageRequest.of(page, 6))
                 .flatMap(this::buildPostResponse);
 
         return postContentResponseFlux.collectList()

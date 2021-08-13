@@ -27,7 +27,7 @@ public class AuthHandler {
     }
 
     public Mono<ServerResponse> refreshToken(ServerRequest request) {
-        String refreshToken = request.headers().firstHeader("Authorization");
+        String refreshToken = request.headers().firstHeader("Refresh-Token");
         return ServerResponse.ok().body(authService.refreshToken(refreshToken), AccessTokenResponse.class);
     }
 }
