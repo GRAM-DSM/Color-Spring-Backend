@@ -1,9 +1,7 @@
 package jhhong.gramo.color.domain.post.comment.handler;
 
-import jhhong.gramo.color.domain.post.comment.exception.CommentNotFoundException;
 import jhhong.gramo.color.domain.post.comment.payload.CreateCommentRequest;
 import jhhong.gramo.color.domain.post.comment.service.CommentService;
-import jhhong.gramo.color.domain.post.post.exceptions.PostNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
