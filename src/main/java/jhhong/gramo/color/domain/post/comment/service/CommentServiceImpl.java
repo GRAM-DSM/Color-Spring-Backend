@@ -61,7 +61,7 @@ public class CommentServiceImpl implements CommentService {
         return authenticationFacade.getUser()
                 .map(user ->
                         Comment.builder()
-                                .content(request.content())
+                                .content(request.getContent())
                                 .userEmail(user.getEmail())
                                 .userNickname(user.getNickname())
                                 .id(UUID.randomUUID().toString())
