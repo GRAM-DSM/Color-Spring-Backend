@@ -73,7 +73,7 @@ public class PostServiceImpl implements PostService {
     public Mono<PostListResponse> getPost(Feel feel, int page) {
         return postRepository.findAllByFeelOrderByCreatedAtDesc(feel, PageRequest.of(page, 6))
                 .flatMap(this::buildPostResponse)
-                .collectList()
+                .collectSortedList()
                 .flatMap(this::buildPostListResponse);
     }
 
