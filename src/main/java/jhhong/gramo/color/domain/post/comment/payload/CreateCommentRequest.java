@@ -1,6 +1,13 @@
 package jhhong.gramo.color.domain.post.comment.payload;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 import javax.validation.constraints.NotBlank;
 
-public record CreateCommentRequest(@NotBlank String content) {
+@Getter
+@AllArgsConstructor
+public class CreateCommentRequest {
+    @NotBlank
+    private final String content;
 }
