@@ -1,5 +1,6 @@
 package jhhong.gramo.color.domain.auth.handler;
 
+import jhhong.gramo.color.domain.auth.exception.RefreshTokenNotFoundException;
 import jhhong.gramo.color.domain.auth.payload.AccessTokenResponse;
 import jhhong.gramo.color.domain.auth.payload.AuthRequest;
 import jhhong.gramo.color.domain.auth.payload.TokenResponse;
@@ -28,6 +29,10 @@ public class AuthHandler {
 
     public Mono<ServerResponse> refreshToken(ServerRequest request) {
         String refreshToken = request.headers().firstHeader("Refresh-Token");
-        return ServerResponse.ok().body(authService.refreshToken(refreshToken), AccessTokenResponse.class);
+        if(refreshToken == null) {
+            return Mono.error(RefreshTokenNotFoundException::new);
+        }
+
+        return ServerResponse.ok().body(authService.refreshToken(refreshToken.replace("Bearer ", "");), AccessTokenResponse.class);
     }
 }
