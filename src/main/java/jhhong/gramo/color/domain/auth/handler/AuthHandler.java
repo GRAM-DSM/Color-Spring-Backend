@@ -33,6 +33,6 @@ public class AuthHandler {
             return Mono.error(RefreshTokenNotFoundException::new);
         }
 
-        return ServerResponse.ok().body(authService.refreshToken(refreshToken.replace("Bearer ", "");), AccessTokenResponse.class);
+        return ServerResponse.ok().body(authService.refreshToken(refreshToken.replace("Bearer ", "")), AccessTokenResponse.class);
     }
 }
