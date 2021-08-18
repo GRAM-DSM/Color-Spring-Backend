@@ -21,6 +21,6 @@ public class JwtVerifier {
     private Mono<Claims> validateToken(Mono<Claims> claimsMono) {
         return claimsMono
                 .filter(claims -> claims.get("type").equals(TokenType.ACCESS_TOKEN.getType()))
-                .switchIfEmpty(Mono.error(InvalidTokenException::new));
+                .switchIfEmpty(Mono.error(InvalidTokenException.EXCEPTION));
     }
 }

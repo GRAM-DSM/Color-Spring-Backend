@@ -64,7 +64,7 @@ public class Post {
 
     private Comment findComment(String commentId) {
         return comment.stream().filter(com -> com.getId().equals(commentId)).findFirst()
-                .orElseThrow(CommentNotFoundException::new);
+                .orElseThrow(() -> CommentNotFoundException.EXCEPTION);
     }
 
 }

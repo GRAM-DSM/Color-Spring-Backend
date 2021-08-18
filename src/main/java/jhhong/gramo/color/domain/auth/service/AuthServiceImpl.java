@@ -35,7 +35,7 @@ public class AuthServiceImpl implements AuthService {
                 .flatMap(user -> saveIfEmpty(user.getEmail()))
                 .zipWith(jwtTokenProvider.generateToken(authRequest.email(), TokenType.ACCESS_TOKEN))
                 .flatMap(tokens -> Mono.just(new TokenResponse(tokens.getT2(), tokens.getT1().getRefreshToken())))
-                .switchIfEmpty(Mono.error(UserNotFoundException::new));
+                .switchIfEmpty(Mono.error(UserNotFoundException.EXCEPTION));
     }
 
     @Override
@@ -47,7 +47,7 @@ public class AuthServiceImpl implements AuthService {
                 .map(Claims::getSubject)
                 .flatMap(email -> jwtTokenProvider.generateToken(email, TokenType.ACCESS_TOKEN))
                 .flatMap(accessToken -> Mono.just(new AccessTokenResponse(accessToken)))
-                .switchIfEmpty(Mono.error(RefreshTokenNotFoundException::new));
+                .switchIfEmpty(Mono.error(RefreshTokenNotFoundException.EXCEPTION));
     }
 
     private Mono<RefreshToken> buildRefreshToken(String email) {

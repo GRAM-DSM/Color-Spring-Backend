@@ -35,7 +35,7 @@ public class JwtTokenProvider {
             return Mono.just(Jwts.parser().setSigningKey(getSecret())
                     .parseClaimsJws(token).getBody());
         } catch (Exception e) {
-            return Mono.error(InvalidTokenException::new);
+            return Mono.error(InvalidTokenException.EXCEPTION);
         }
     }
 

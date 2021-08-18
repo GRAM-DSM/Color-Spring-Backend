@@ -30,7 +30,7 @@ public class AuthHandler {
     public Mono<ServerResponse> refreshToken(ServerRequest request) {
         String refreshToken = request.headers().firstHeader("Refresh-Token");
         if(refreshToken == null) {
-            return Mono.error(RefreshTokenNotFoundException::new);
+            return Mono.error(RefreshTokenNotFoundException.EXCEPTION);
         }
 
         return ServerResponse.ok().body(authService.refreshToken(refreshToken.replace("Bearer ", "")), AccessTokenResponse.class);

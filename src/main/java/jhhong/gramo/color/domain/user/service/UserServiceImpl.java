@@ -28,11 +28,11 @@ public class UserServiceImpl implements UserService {
     public Mono<Void> createUser(UserRequest request) {
         Mono<EmailUser> emailUserMono = userRepository.existsByEmailOrNickname(request.email(), request.nickname())
                 .filter(bool -> !bool)
-                .switchIfEmpty(Mono.error(UserAlreadyExistsException::new))
+                .switchIfEmpty(Mono.error(UserAlreadyExistsException.EXCEPTION))
                 .flatMap(bool -> emailUserExportRepository.findByEmail(request.email()));
 
         return emailUserMono
-                .switchIfEmpty(Mono.error(EmailUserNotFoundException::new))
+                .switchIfEmpty(Mono.error(EmailUserNotFoundException.EXCEPTION))
                 .flatMap(emailUser -> userRepository.save(this.buildUser(request)))
                 .then();
     }
@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
     public Mono<Void> checkNickname(String nickname) {
         return userRepository.existsByNickname(nickname)
                 .filter(bool -> !bool)
-                .switchIfEmpty(Mono.error(UserAlreadyExistsException::new))
+                .switchIfEmpty(Mono.error(UserAlreadyExistsException.EXCEPTION))
                 .then();
     }
 

@@ -18,6 +18,6 @@ public class CustomValidator {
         return errors.doOnNext(err -> validator.validate(target, err))
                 .filter(err -> !err.hasErrors())
                 .flatMap(err -> Mono.just(target))
-                .switchIfEmpty(Mono.error(BadRequestException::new));
+                .switchIfEmpty(Mono.error(BadRequestException.EXCEPTION));
     }
 }

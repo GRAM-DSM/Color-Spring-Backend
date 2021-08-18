@@ -36,20 +36,20 @@ public class PostServiceImpl implements PostService {
                 .flatMap(user -> userRepository.findById(user.getEmail()))
                 .flatMap(user -> buildPost(request))
                 .flatMap(postRepository::save)
-                .switchIfEmpty(Mono.error(UserNotFoundException::new))
+                .switchIfEmpty(Mono.error(UserNotFoundException.EXCEPTION))
                 .then();
     }
 
     @Override
     public Mono<Void> updatePost(String id, CreatePostRequest request) {
         Mono<Post> postMono = postRepository.findById(id)
-                .switchIfEmpty(Mono.error(PostNotFoundException::new));
+                .switchIfEmpty(Mono.error(PostNotFoundException.EXCEPTION));
 
         Mono<Post> filteredPostMono = postMono
                 .zipWith(authenticationFacade.getUser())
                 .filter(infos -> infos.getT1().getUserEmail().equals(infos.getT2().getEmail()))
                 .map(Tuple2::getT1)
-                .switchIfEmpty(Mono.error(InvalidAccessException::new));
+                .switchIfEmpty(Mono.error(InvalidAccessException.EXCEPTION));
 
         return filteredPostMono
                 .flatMap(post -> post.updatePost(request))
@@ -60,12 +60,12 @@ public class PostServiceImpl implements PostService {
     @Override
     public Mono<Void> deletePost(String id) {
         Mono<Post> postMono = postRepository.findById(id)
-                .switchIfEmpty(Mono.error(PostNotFoundException::new));
+                .switchIfEmpty(Mono.error(PostNotFoundException.EXCEPTION));
 
         return authenticationFacade.getUser()
                 .zipWith(postMono)
                 .filter(zip -> zip.getT2().getUserEmail().equals(zip.getT1().getEmail()))
-                .switchIfEmpty(Mono.error(InvalidAccessException::new))
+                .switchIfEmpty(Mono.error(InvalidAccessException.EXCEPTION))
                 .flatMap(zip -> postRepository.delete(zip.getT2()));
     }
 

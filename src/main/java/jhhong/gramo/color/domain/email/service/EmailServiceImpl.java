@@ -51,7 +51,7 @@ public class EmailServiceImpl implements EmailService {
         return emailUserRepository.findByEmailAndCode(email, code.toUpperCase())
                 .flatMap(emailUser -> Mono.just(emailUser.updateStatus()))
                 .flatMap(emailUserRepository::save)
-                .switchIfEmpty(Mono.error(NumberNotFoundException::new))
+                .switchIfEmpty(Mono.error(NumberNotFoundException.EXCEPTION))
                 .then();
     }
 

@@ -28,7 +28,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Mono<Void> createComment(CreateCommentRequest request, String postId) {
         return postRepository.findById(postId)
-                .switchIfEmpty(Mono.error(PostNotFoundException::new))
+                .switchIfEmpty(Mono.error(PostNotFoundException.EXCEPTION))
                 .zipWith(buildComment(request))
                 .flatMap(infos -> infos.getT1().addComment(infos.getT2()))
                 .flatMap(postRepository::save)
@@ -38,13 +38,13 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Mono<Void> deleteComment(String postId, String commentId) {
         Mono<Post> postMono = postRepository.findById(postId)
-                .switchIfEmpty(Mono.error(PostNotFoundException::new));
+                .switchIfEmpty(Mono.error(PostNotFoundException.EXCEPTION));
 
         Mono<Post> filteredPostMono = postMono
                 .zipWith(authenticationFacade.getUser())
                 .filter(postUserTuple -> postUserTuple.getT1().getUserEmail().equals(postUserTuple.getT2().getEmail()))
                 .map(Tuple2::getT1)
-                .switchIfEmpty(Mono.error(InvalidAccessException::new));
+                .switchIfEmpty(Mono.error(InvalidAccessException.EXCEPTION));
 
         return filteredPostMono.flatMap(post -> post.deleteComment(commentId))
                 .flatMap(postRepository::save)
