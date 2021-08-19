@@ -9,20 +9,21 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class CommentContentResponse {
 
-    private final String id;
+    private String id;
 
-    private final String content;
+    private String content;
 
     @JsonProperty("created_at")
-    private final LocalDateTime createdAt;
+    private LocalDateTime createdAt;
 
     @JsonProperty("is_mine")
-    private final Boolean isMine;
+    private Boolean isMine;
 
     @JsonProperty("user_nickname")
-    private final String userNickname;
+    private String userNickname;
 }
