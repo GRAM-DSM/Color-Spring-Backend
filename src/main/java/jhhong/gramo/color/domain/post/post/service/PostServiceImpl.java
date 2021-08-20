@@ -71,8 +71,8 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Mono<PostListResponse> getPost(Feel feel, int page) {
-        `return postRepository.findAllByFeelOrderByCreatedAtDesc(feel, PageRequest.of(page, 6))
-                `.flatMapSequential(this::buildPostResponse)
+        return postRepository.findAllByFeelOrderByCreatedAtDesc(feel, PageRequest.of(page, 6))
+                .flatMapSequential(this::buildPostResponse)
                 .collectList()
                 .map(this::buildPostListResponse);
     }
