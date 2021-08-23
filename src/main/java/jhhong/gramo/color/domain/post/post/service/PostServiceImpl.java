@@ -11,6 +11,7 @@ import jhhong.gramo.color.domain.post.post.payload.PostListResponse;
 import jhhong.gramo.color.domain.user.entity.UserRepository;
 import jhhong.gramo.color.domain.user.exception.UserNotFoundException;
 import jhhong.gramo.color.global.security.authentication.AuthenticationFacade;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,18 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+// 2021-08-23 DSM 임베디드과 안은결
+@Getter
+class Sexy {
+    private boolean isSexy = false;
+    public void doYouSexy(String answer){
+        if(answer.equalsIgnoreCase("y")) {
+            this.isSexy = true;
+        }
+        else isSexy = false;
+    }
+}
+
 @RequiredArgsConstructor
 @Service
 public class PostServiceImpl implements PostService {
@@ -29,9 +42,12 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final AuthenticationFacade authenticationFacade;
+    private final Sexy sexy = new Sexy();
 
     @Override
     public Mono<Void> createPost(CreatePostRequest request) {
+        sexy.doYouSexy("y");
+        System.out.println(sexy.isSexy());
         return authenticationFacade.getUser()
                 .flatMap(user -> userRepository.findById(user.getEmail()))
                 .flatMap(user -> buildPost(request))
