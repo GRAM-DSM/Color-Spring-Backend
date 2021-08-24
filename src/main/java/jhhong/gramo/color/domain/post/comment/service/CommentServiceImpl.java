@@ -40,14 +40,13 @@ public class CommentServiceImpl implements CommentService {
         Mono<Post> postMono = postRepository.findById(postId)
                 .switchIfEmpty(Mono.error(PostNotFoundException.EXCEPTION));
 
-        Mono<Post> filteredPostMono = postMono
+        return postMono
                 .zipWith(authenticationFacade.getUser())
                 .filter(postUserTuple -> postUserTuple.getT1().getUserEmail().equals(postUserTuple.getT2().getEmail()))
                 .map(Tuple2::getT1)
-                .switchIfEmpty(Mono.error(InvalidAccessException.EXCEPTION));
-
-        return filteredPostMono.flatMap(post -> post.deleteComment(commentId))
+                .flatMap(post -> post.deleteComment(commentId))
                 .flatMap(postRepository::save)
+                .switchIfEmpty(Mono.error(InvalidAccessException.EXCEPTION))
                 .then();
     }
 
