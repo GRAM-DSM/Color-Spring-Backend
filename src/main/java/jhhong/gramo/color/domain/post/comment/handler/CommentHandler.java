@@ -32,7 +32,7 @@ public class CommentHandler {
 
         String postId = request.pathVariable("post_id");
 
-        return ServerResponse.status(204).build(commentService.deleteComment(postId, commentId));
+        return ServerResponse.status(204).body(commentService.deleteComment(postId, commentId), Void.class);
     }
 
     public Mono<ServerResponse> createComment(ServerRequest request) {
