@@ -42,9 +42,7 @@ public class CommentServiceImpl implements CommentService {
 
         return postMono
                 .zipWith(authenticationFacade.getUser())
-                .filter(postUserTuple -> postUserTuple.getT1().getUserEmail().equals(postUserTuple.getT2().getEmail()))
-                .map(Tuple2::getT1)
-                .flatMap(post -> post.deleteComment(commentId))
+                .flatMap(post -> post.getT1().deleteComment(commentId, post.getT2().getEmail()))
                 .flatMap(postRepository::save)
                 .switchIfEmpty(Mono.error(InvalidAccessException.EXCEPTION))
                 .then();

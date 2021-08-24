@@ -57,13 +57,14 @@ public class Post {
         return Mono.just(this);
     }
 
-    public Mono<Post> deleteComment(String commentId) {
-        comment.remove(findComment(commentId));
+    public Mono<Post> deleteComment(String commentId, String userEmail) {
+        comment.remove(findComment(commentId, userEmail));
         return Mono.just(this);
     }
 
-    private Comment findComment(String commentId) {
-        return comment.stream().filter(com -> com.getId().equals(commentId)).findFirst()
+    private Comment findComment(String commentId, String userEmail) {
+        return comment.stream().filter(com -> com.getId().equals(commentId) && com.getUserEmail().equals(userEmail))
+                .findFirst()
                 .orElseThrow(() -> CommentNotFoundException.EXCEPTION);
     }
 
