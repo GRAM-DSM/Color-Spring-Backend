@@ -23,7 +23,7 @@ public class Report {
     @Field(name = "_id")
     private ObjectId postId;
 
-    @MongoId
+    @Id
     @Field(name = "id")
     private ObjectId id;
 
