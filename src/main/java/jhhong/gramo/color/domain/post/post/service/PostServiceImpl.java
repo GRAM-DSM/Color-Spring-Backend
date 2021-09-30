@@ -2,6 +2,7 @@ package jhhong.gramo.color.domain.post.post.service;
 
 import jhhong.gramo.color.domain.post.entity.Post;
 import jhhong.gramo.color.domain.post.entity.PostRepository;
+import jhhong.gramo.color.domain.post.entity.ReportRepository;
 import jhhong.gramo.color.domain.post.entity.enums.Feel;
 import jhhong.gramo.color.domain.post.post.exceptions.InvalidAccessException;
 import jhhong.gramo.color.domain.post.post.exceptions.PostNotFoundException;
@@ -13,6 +14,7 @@ import jhhong.gramo.color.domain.user.exception.UserNotFoundException;
 import jhhong.gramo.color.global.security.authentication.AuthenticationFacade;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -42,6 +44,7 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final AuthenticationFacade authenticationFacade;
+    private final ReportRepository reportRepository;
     private final Sexy sexy = new Sexy();
 
     @Override
@@ -82,7 +85,9 @@ public class PostServiceImpl implements PostService {
                 .zipWith(postMono)
                 .filter(zip -> zip.getT2().getUserEmail().equals(zip.getT1().getEmail()))
                 .switchIfEmpty(Mono.error(InvalidAccessException.EXCEPTION))
-                .flatMap(zip -> postRepository.delete(zip.getT2()));
+                .flatMap(zip -> postRepository.delete(zip.getT2()))
+                .zipWith(postMono)
+                .flatMap(objects -> reportRepository.deleteAllByPostId(new ObjectId(objects.getT2().getId())));
     }
 
     @Override
