@@ -62,7 +62,7 @@ public class Post {
         return Mono.just(this);
     }
 
-    private Comment findComment(String commentId, String userEmail) {
+    public Comment findComment(String commentId, String userEmail) {
         return comment.stream().filter(com -> com.getId().equals(commentId) && com.getUserEmail().equals(userEmail))
                 .findFirst()
                 .orElseThrow(() -> CommentNotFoundException.EXCEPTION);

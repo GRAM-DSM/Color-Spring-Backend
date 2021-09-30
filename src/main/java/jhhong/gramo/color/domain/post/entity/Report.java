@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @Document
 public class Report {
 
-    @Field(name = "_id")
+    @Field(name = "reportedId")
     private ObjectId postId;
 
     @Id

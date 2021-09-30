@@ -6,14 +6,15 @@ import jhhong.gramo.color.domain.post.comment.payload.CommentListResponse;
 import jhhong.gramo.color.domain.post.comment.payload.CreateCommentRequest;
 import jhhong.gramo.color.domain.post.entity.Post;
 import jhhong.gramo.color.domain.post.entity.PostRepository;
+import jhhong.gramo.color.domain.post.entity.ReportRepository;
 import jhhong.gramo.color.domain.post.post.exceptions.InvalidAccessException;
 import jhhong.gramo.color.domain.post.post.exceptions.PostNotFoundException;
 import jhhong.gramo.color.global.security.authentication.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-import reactor.util.function.Tuple2;
 
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -24,6 +25,7 @@ public class CommentServiceImpl implements CommentService {
 
     private final PostRepository postRepository;
     private final AuthenticationFacade authenticationFacade;
+    private final ReportRepository reportRepository;
 
     @Override
     public Mono<Void> createComment(CreateCommentRequest request, String postId) {
@@ -43,9 +45,9 @@ public class CommentServiceImpl implements CommentService {
         return postMono
                 .zipWith(authenticationFacade.getUser())
                 .flatMap(post -> post.getT1().deleteComment(commentId, post.getT2().getEmail()))
-                .flatMap(postRepository::save)
                 .switchIfEmpty(Mono.error(InvalidAccessException.EXCEPTION))
-                .then();
+                .flatMap(postRepository::save)
+                .flatMap(post -> reportRepository.deleteAllByPostId(new ObjectId(commentId)));
     }
 
     @Override
